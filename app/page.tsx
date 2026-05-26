@@ -130,49 +130,85 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* App Screen Content Mockup */}
-              <div className="flex-1 bg-slate-900 rounded-[36px] p-5 flex flex-col justify-between overflow-hidden relative border border-slate-800">
-                {/* App Header */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
+              {/* App Screen Content Mockup - High Fidelity HomeScreen.tsx */}
+              <div className="flex-1 bg-slate-950 rounded-[36px] p-4 flex flex-col justify-between overflow-hidden relative border border-slate-900 select-none">
+                
+                {/* App Top Bar */}
+                <div className="flex items-center justify-between border-b border-slate-900 pb-2">
+                  <div className="flex items-center gap-1.5">
                     <Image 
                       src="/icon.png" 
-                      width={18} 
-                      height={18} 
-                      className="rounded-md object-cover" 
+                      width={14} 
+                      height={14} 
+                      className="rounded object-cover" 
                       alt="Are You Okay? Logo"
                     />
-                    <span className="text-xs font-bold text-white">Are You Okay?</span>
+                    <span className="text-[10px] font-black text-slate-300">Are You Okay?</span>
                   </div>
-                  <span className="text-sm">💎</span>
+                  <span className="text-xs">💎</span>
                 </div>
 
-                {/* Main Prompt */}
-                <div className="text-center my-auto py-6 space-y-6">
-                  <div className="text-4xl animate-bounce">👋</div>
-                  <h2 className="text-xl font-extrabold text-white leading-tight">
+                {/* Real App Greeting & Date */}
+                <div className="text-left mt-3">
+                  <h3 className="text-sm font-black text-white leading-tight">Good morning, Alex!</h3>
+                  <p className="text-[9px] text-slate-400 mt-0.5">Hope you are having a peaceful day.</p>
+                  <p className="text-[8px] text-slate-500 font-medium mt-1">Tuesday, May 26</p>
+                </div>
+
+                {/* Real App Streak Card Component */}
+                <div className="bg-slate-900/60 border border-slate-900 rounded-xl p-2.5 mt-3">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-[8px] font-bold text-slate-500 uppercase tracking-wider">STREAK</span>
+                    <span className="text-[8px] font-bold text-amber-500 bg-amber-500/10 px-1.5 py-0.5 rounded-md">🔥 5 days</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    {[
+                      { label: "S", status: "ok" },
+                      { label: "M", status: "ok" },
+                      { label: "T", status: "ok" },
+                      { label: "W", status: "not-ok" },
+                      { label: "T", status: "ok" },
+                      { label: "F", status: "ok" },
+                      { label: "S", status: "missed" }
+                    ].map((item, i) => (
+                      <div key={i} className="flex flex-col items-center gap-1">
+                        <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] ${
+                          item.status === 'ok' ? 'bg-teal-500/20 border border-teal-500 text-teal-400 font-bold' : 
+                          item.status === 'not-ok' ? 'bg-rose-500/20 border border-rose-500 text-rose-400 font-bold' : 
+                          'bg-slate-800 border border-slate-700 text-slate-500'
+                        }`}>
+                          {item.status === 'ok' ? '✓' : item.status === 'not-ok' ? '⚠' : ''}
+                        </div>
+                        <span className="text-[8px] text-slate-500 font-semibold">{item.label}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Real App Check-in Action Card */}
+                <div className="bg-slate-900/60 border border-slate-900 rounded-xl p-3 mt-3 flex-1 flex flex-col justify-center">
+                  <h4 className="text-[11px] font-extrabold text-white text-center mb-3">
                     How are you feeling today?
-                  </h2>
-                  <p className="text-xs text-slate-400">
-                    Your daily check-in is due. Reassure your loved ones in one tap.
-                  </p>
-
-                  {/* OK & NOT OK Buttons */}
-                  <div className="space-y-3 pt-4">
-                    <div className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-blue-600 to-emerald-500 text-xs font-bold text-white shadow-md shadow-blue-600/10 flex items-center justify-center gap-2">
-                      <span>✓</span> I'm Okay
+                  </h4>
+                  <div className="flex gap-2">
+                    {/* Teal-green I'm Okay Button */}
+                    <div className="flex-1 py-2.5 rounded-lg bg-teal-500/10 border border-teal-500/30 flex flex-col items-center justify-center gap-1 cursor-pointer">
+                      <span className="text-base">😊</span>
+                      <span className="text-[9px] font-black text-teal-400">I'm Okay</span>
                     </div>
-                    <div className="w-full py-3.5 rounded-2xl bg-slate-800 border border-slate-700 text-xs font-bold text-slate-300 hover:text-white flex items-center justify-center gap-2">
-                      <span>⚠</span> Not Okay
+                    {/* Rose-red Not Okay Button */}
+                    <div className="flex-1 py-2.5 rounded-lg bg-rose-500/10 border border-rose-500/30 flex flex-col items-center justify-center gap-1 cursor-pointer">
+                      <span className="text-base">😔</span>
+                      <span className="text-[9px] font-black text-rose-400">Not Okay</span>
                     </div>
                   </div>
                 </div>
 
-                {/* Secure Notice */}
-                <div className="bg-slate-950/40 border border-slate-800 rounded-xl p-3 flex items-center gap-2">
-                  <span className="text-xs">🔒</span>
-                  <span className="text-[9px] text-slate-500 text-left leading-normal font-medium">
-                    If you don't check in for 3 days, your emergency contact will be notified.
+                {/* Secure Notice Footer */}
+                <div className="bg-slate-950 border border-slate-900 rounded-xl p-2 mt-3 flex items-center gap-1.5">
+                  <span className="text-[9px]">🔒</span>
+                  <span className="text-[8px] text-slate-500 text-left leading-normal font-semibold">
+                    Inactivity for 3 days automatically triggers emergency alert.
                   </span>
                 </div>
               </div>
