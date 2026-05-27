@@ -54,7 +54,7 @@ function ViewContent() {
   const [error, setError] = useState<string | null>(null);
   const [errorCode, setErrorCode] = useState<string | null>(null);
   const [data, setData] = useState<AccessResult | null>(null);
-  const [playingAudio, setPlayingAudio] = useState<string | null>(null);
+  const [, setPlayingAudio] = useState<string | null>(null);
 
   useEffect(() => {
     let activeToken = searchParams.get("token");
