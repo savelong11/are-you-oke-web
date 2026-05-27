@@ -32,7 +32,7 @@ export default function TermsOfUse() {
           <section className="space-y-3">
             <h2 className="text-xl font-bold text-white">1. Agreement to Terms</h2>
             <p>
-              By installing, accessing, or using the "Are You Okay?" mobile application or website, you agree to be bound by these Terms of Use and End User License Agreement (EULA). If you do not agree to these terms, do not install or use our application.
+              By installing, accessing, or using the &quot;Are You Okay?&quot; mobile application or website, you agree to be bound by these Terms of Use and End User License Agreement (EULA). If you do not agree to these terms, do not install or use our application.
             </p>
           </section>
 
@@ -43,7 +43,7 @@ export default function TermsOfUse() {
             </p>
             <ul className="list-disc pl-6 space-y-2">
               <li>
-                <strong>Apple App Store:</strong> Purchases and access are subject to Apple's Standard End User License Agreement (EULA) available at: <a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">https://www.apple.com/legal/internet-services/itunes/dev/stdeula/</a>.
+                <strong>Apple App Store:</strong> Purchases and access are subject to Apple&apos;s Standard End User License Agreement (EULA) available at: <a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">https://www.apple.com/legal/internet-services/itunes/dev/stdeula/</a>.
               </li>
               <li>
                 <strong>Google Play Store:</strong> Purchases and access are subject to the standard Google Play Terms of Service: <a href="https://play.google.com/intl/en_US/gplay/about/play-terms/index.html" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">https://play.google.com/intl/en_US/gplay/about/play-terms/index.html</a>.
@@ -75,7 +75,7 @@ export default function TermsOfUse() {
           <section className="space-y-3">
             <h2 className="text-xl font-bold text-white">4. Medical & Crisis Disclaimer (CRITICAL)</h2>
             <p className="bg-amber-950/40 border border-amber-900 rounded-xl p-4 text-amber-300">
-              <strong>⚠ IMPORTANT NOTICE:</strong> "Are You Okay?" is a personal self-help logging and mindfulness tool. It is **NOT** a medical diagnostic service, clinical treatment companion, or suicide prevention hotline. 
+              <strong>⚠ IMPORTANT NOTICE:</strong> &quot;Are You Okay?&quot; is a personal self-help logging and mindfulness tool. It is **NOT** a medical diagnostic service, clinical treatment companion, or suicide prevention hotline. 
               <br /><br />
               If you or someone you know is undergoing an acute psychological crisis, experiencing thoughts of self-harm, or facing a medical emergency, please immediately contact emergency services or reach out to a professional mental health hotline:
               <br /><br />
@@ -88,21 +88,21 @@ export default function TermsOfUse() {
           <section className="space-y-3">
             <h2 className="text-xl font-bold text-white">5. Trusted Contacts & Notifications</h2>
             <p>
-              If you configure a "trusted contact", you authorize our server to securely send them an notification email containing a secure link to access your mood log history if you fail to check in for your designated duration. You are solely responsible for ensuring the contact details you enter are correct and that you have obtained the contact's permission to be designated.
+              If you configure a &quot;trusted contact&quot;, you authorize our server to securely send them an notification email containing a secure link to access your mood log history if you fail to check in for your designated duration. You are solely responsible for ensuring the contact details you enter are correct and that you have obtained the contact&apos;s permission to be designated.
             </p>
           </section>
 
           <section className="space-y-3">
             <h2 className="text-xl font-bold text-white">6. Intellectual Property</h2>
             <p>
-              All software code, visual designs, assets, logo iconography, and trademark designations of "Are You Okay?" remain the exclusive intellectual property of our development team. You are granted a limited, personal, non-transferable, revocable license to use the app for personal, non-commercial purposes.
+              All software code, visual designs, assets, logo iconography, and trademark designations of &quot;Are You Okay?&quot; remain the exclusive intellectual property of our development team. You are granted a limited, personal, non-transferable, revocable license to use the app for personal, non-commercial purposes.
             </p>
           </section>
 
           <section className="space-y-3">
             <h2 className="text-xl font-bold text-white">7. Governing Law</h2>
             <p>
-              These terms are governed by and construed in accordance with the applicable consumer and technology laws of the developer's jurisdiction, alongside international App Store and Google Play merchant compliance guidelines.
+              These terms are governed by and construed in accordance with the applicable consumer and technology laws of the developer&apos;s jurisdiction, alongside international App Store and Google Play merchant compliance guidelines.
             </p>
           </section>
         </div>

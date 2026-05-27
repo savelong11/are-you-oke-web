@@ -32,7 +32,7 @@ export default function PrivacyPolicy() {
           <section className="space-y-3">
             <h2 className="text-xl font-bold text-white">1. Introduction</h2>
             <p>
-              Welcome to "Are You Okay?". We respect your privacy and are committed to protecting your personal data. This privacy policy explains how we handle, collect, and safeguard your information when you use our emotional tracking mobile application and website services.
+              Welcome to &quot;Are You Okay?&quot;. We respect your privacy and are committed to protecting your personal data. This privacy policy explains how we handle, collect, and safeguard your information when you use our emotional tracking mobile application and website services.
             </p>
           </section>
 
@@ -57,7 +57,7 @@ export default function PrivacyPolicy() {
           <section className="space-y-3">
             <h2 className="text-xl font-bold text-white">3. How We Use Your Data</h2>
             <p>
-              We utilize your information solely to deliver and improve the "Are You Okay?" experience, specifically to:
+              We utilize your information solely to deliver and improve the &quot;Are You Okay?&quot; experience, specifically to:
             </p>
             <ul className="list-disc pl-6 space-y-2">
               <li>Track your emotional health history and streak progression.</li>
@@ -82,7 +82,7 @@ export default function PrivacyPolicy() {
           </section>
 
           <section className="space-y-3">
-            <h2 className="text-xl font-bold text-white">6. Children's Privacy</h2>
+            <h2 className="text-xl font-bold text-white">6. Children&apos;s Privacy</h2>
             <p>
               Our services are intended for a general audience. We do not knowingly collect personal identifiable information from children under the age of 13. If you believe a child has provided us with personal data, please contact us immediately to have it deleted.
             </p>

@@ -194,7 +194,7 @@ export default function Home() {
                     {/* Teal-green I'm Okay Button */}
                     <div className="flex-1 py-2.5 rounded-lg bg-teal-500/10 border border-teal-500/30 flex flex-col items-center justify-center gap-1 cursor-pointer">
                       <span className="text-base">😊</span>
-                      <span className="text-[9px] font-black text-teal-400">I'm Okay</span>
+                      <span className="text-[9px] font-black text-teal-400">I&apos;m Okay</span>
                     </div>
                     {/* Rose-red Not Okay Button */}
                     <div className="flex-1 py-2.5 rounded-lg bg-rose-500/10 border border-rose-500/30 flex flex-col items-center justify-center gap-1 cursor-pointer">
@@ -240,7 +240,7 @@ export default function Home() {
               </div>
               <h3 className="text-xl font-bold text-white mb-3">One-Tap Daily Check-in</h3>
               <p className="text-slate-400 leading-relaxed text-sm">
-                Log your daily mood instantly with a single button. Choose personalized emotional tags to reflect on how you're feeling without typing a single word if you don't want to.
+                Log your daily mood instantly with a single button. Choose personalized emotional tags to reflect on how you&apos;re feeling without typing a single word if you don&apos;t want to.
               </p>
             </div>
 
@@ -288,7 +288,7 @@ export default function Home() {
               Simple & Reliable Workflow
             </h2>
             <p className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-              How "Are You Okay?" Works
+              How &quot;Are You Okay?&quot; Works
             </p>
             <p className="text-slate-400">
               Three simple steps to build a daily mindfulness habit and establish an emotional safety net.

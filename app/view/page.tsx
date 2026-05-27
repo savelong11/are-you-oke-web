@@ -54,7 +54,7 @@ function ViewContent() {
   const [error, setError] = useState<string | null>(null);
   const [errorCode, setErrorCode] = useState<string | null>(null);
   const [data, setData] = useState<AccessResult | null>(null);
-  const [playingAudio, setPlayingAudio] = useState<string | null>(null);
+  const [, setPlayingAudio] = useState<string | null>(null);
 
   useEffect(() => {
     let activeToken = searchParams.get("token");
@@ -78,6 +78,11 @@ function ViewContent() {
 
     const fetchAccess = async () => {
       try {
+        if (!activeToken) {
+          setError("No token provided");
+          return;
+        }
+
         setLoading(true);
         const response = await fetch("/api/grant-access", {
           method: "POST",
@@ -100,12 +105,6 @@ function ViewContent() {
         setLoading(false);
       }
     };
-
-    if (!activeToken) {
-      setError("No token provided");
-      setLoading(false);
-      return;
-    }
 
     fetchAccess();
   }, [searchParams]);
