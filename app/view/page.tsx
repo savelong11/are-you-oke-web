@@ -83,10 +83,17 @@ function ViewContent() {
           return;
         }
 
+        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://fjwlnitpkkfxocmezuwm.supabase.co";
+        const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZqd2xuaXRwa2tmeG9jbWV6dXdtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MDc0MzYsImV4cCI6MjA5Mzk4MzQzNn0.UAqf6p8_AtPMsTHXDes9n7xw-sVICHUUkvJ1m9mAIvc";
+
         setLoading(true);
-        const response = await fetch("/api/grant-access", {
+        const response = await fetch(`${supabaseUrl}/functions/v1/grant-access`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { 
+            "Content-Type": "application/json",
+            "apikey": supabaseAnonKey,
+            "Authorization": `Bearer ${supabaseAnonKey}`
+          },
           body: JSON.stringify({ token: activeToken }),
         });
 
