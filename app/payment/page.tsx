@@ -15,7 +15,7 @@ const LANGUAGES = [
   { code: "id", name: "Bahasa Indonesia", flag: "🇮🇩" },
 ];
 
-const LOCALES: Record<string, any> = {
+const LOCALES: Record<string, Record<string, string>> = {
   en: {
     title: "Payment & Billing Policy",
     lastUpdated: "Last Updated: May 26, 2026",
@@ -557,6 +557,7 @@ export default function PaymentPolicy() {
       const params = new URLSearchParams(window.location.search);
       const urlLang = params.get("lang");
       if (urlLang && LOCALES[urlLang]) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setLang(urlLang);
         return;
       }
