@@ -7,9 +7,11 @@ export async function POST(request: NextRequest) {
   try {
     const { token } = await request.json();
 
-    if (!token) {
+    const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+    if (!token || typeof token !== 'string' || !UUID_REGEX.test(token)) {
       return NextResponse.json(
-        { error: 'Token is required', code: 'INVALID_TOKEN' },
+        { error: 'Invalid or missing token format', code: 'INVALID_TOKEN' },
         { status: 400 }
       );
     }

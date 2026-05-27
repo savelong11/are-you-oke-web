@@ -49,7 +49,6 @@ function formatDate(dateStr: string): string {
 
 function ViewContent() {
   const searchParams = useSearchParams();
-  const token = searchParams.get("token");
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -58,13 +57,32 @@ function ViewContent() {
   const [playingAudio, setPlayingAudio] = useState<string | null>(null);
 
   useEffect(() => {
+    let activeToken = searchParams.get("token");
+
+    if (activeToken) {
+      // Securely store token in sessionStorage
+      sessionStorage.setItem("emergency_token", activeToken);
+      
+      // Strip the token from the browser address bar immediately to prevent Referer leakage & history logging
+      try {
+        const url = new URL(window.location.href);
+        url.searchParams.delete("token");
+        window.history.replaceState({}, "", url.pathname + url.search);
+      } catch (e) {
+        console.error("Failed to strip token from URL:", e);
+      }
+    } else {
+      // Fallback to sessionStorage if user refreshes the page
+      activeToken = sessionStorage.getItem("emergency_token");
+    }
+
     const fetchAccess = async () => {
       try {
         setLoading(true);
         const response = await fetch("/api/grant-access", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ token }),
+          body: JSON.stringify({ token: activeToken }),
         });
 
         const result = await response.json();
@@ -83,14 +101,14 @@ function ViewContent() {
       }
     };
 
-    if (!token) {
+    if (!activeToken) {
       setError("No token provided");
       setLoading(false);
       return;
     }
 
     fetchAccess();
-  }, [token]);
+  }, [searchParams]);
 
   if (loading) {
     return (
