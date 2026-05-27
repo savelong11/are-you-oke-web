@@ -58,6 +58,31 @@ function ViewContent() {
   const [playingAudio, setPlayingAudio] = useState<string | null>(null);
 
   useEffect(() => {
+    const fetchAccess = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch("/api/grant-access", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token }),
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          setErrorCode(result.code || "UNKNOWN_ERROR");
+          setError(result.error || "Failed to verify access");
+          return;
+        }
+
+        setData(result);
+      } catch {
+        setError("Failed to connect to server");
+      } finally {
+        setLoading(false);
+      }
+    };
+
     if (!token) {
       setError("No token provided");
       setLoading(false);
@@ -66,31 +91,6 @@ function ViewContent() {
 
     fetchAccess();
   }, [token]);
-
-  const fetchAccess = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch("/api/grant-access", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token }),
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        setErrorCode(result.code || "UNKNOWN_ERROR");
-        setError(result.error || "Failed to verify access");
-        return;
-      }
-
-      setData(result);
-    } catch {
-      setError("Failed to connect to server");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   if (loading) {
     return (
