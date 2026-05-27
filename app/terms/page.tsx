@@ -52,22 +52,31 @@ export default function TermsOfUse() {
           </section>
 
           <section className="space-y-3">
-            <h2 className="text-xl font-bold text-white">3. Auto-Renewable Subscriptions</h2>
+            <h2 className="text-xl font-bold text-white">3. Auto-Renewable Subscriptions & Billing</h2>
             <p>
               Our application offers in-app purchases and auto-renewable subscriptions (Pro and Premium Tiers) to grant advanced features:
             </p>
             <ul className="list-disc pl-6 space-y-2">
               <li>
-                <strong>Subscription Period:</strong> Options include Monthly (1 month) or Yearly (1 year) durations.
+                <strong>Subscription Options & Periods:</strong> Options include Monthly (1 month) or Yearly (1 year) durations.
               </li>
               <li>
-                <strong>Payment & Billing:</strong> Subscription payments are processed via Apple App Store / Google Play and are charged to your associated store account upon confirmation of purchase.
+                <strong>Payment & Account Billing:</strong> Subscription payments are processed via Apple App Store / Google Play and are charged to your associated iTunes/Google Play Store account upon confirmation of purchase.
               </li>
               <li>
-                <strong>Auto-Renewal:</strong> Subscriptions automatically renew unless auto-renew is disabled at least 24 hours prior to the conclusion of the current subscription period.
+                <strong>Auto-Renewal:</strong> Subscriptions automatically renew unless auto-renew is turned off at least 24-hours before the end of the current period.
               </li>
               <li>
-                <strong>Cancellation & Refunds:</strong> You can manage or disable subscription auto-renewals at any time in your Apple ID or Google Play Store Account Settings. Refunds are processed and managed solely by the respective app stores.
+                <strong>Renewal Charges:</strong> Your account will be charged for renewal within 24-hours prior to the end of the current period at the rate of the selected plan. The cost of the renewal will be clearly identified in your account settings.
+              </li>
+              <li>
+                <strong>Active Period Cancellations:</strong> No cancellation of the current subscription is allowed during the active subscription period. If you cancel, your active subscription benefits remain functional until the end of the billing cycle.
+              </li>
+              <li>
+                <strong>Free Trial Terms:</strong> Any unused portion of a free trial period, if offered, will be forfeited when you purchase a subscription to that tier, where applicable.
+              </li>
+              <li>
+                <strong>Cancellation & Settings:</strong> You can manage or disable subscription auto-renewals at any time in your Apple ID or Google Play Store Account Settings after purchase. Refunds are processed and managed solely by the respective app stores.
               </li>
             </ul>
           </section>

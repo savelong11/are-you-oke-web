@@ -57,10 +57,16 @@ export default function PaymentPolicy() {
                 <strong>Billing Period:</strong> Subscription charges are billed immediately upon confirmation of purchase to your Apple iTunes Account or Google Play Store Account.
               </li>
               <li>
-                <strong>Automatic Renewal:</strong> Your subscription will automatically renew at the end of the billing cycle (monthly or yearly) unless auto-renew is disabled at least 24 hours prior to the conclusion of the current subscription period.
+                <strong>Automatic Renewal:</strong> Your subscription will automatically renew at the end of the billing cycle (monthly or yearly) unless auto-renew is turned off at least 24 hours prior to the conclusion of the current subscription period.
               </li>
               <li>
-                <strong>Account Charges:</strong> Your account will be charged for renewal at the same subscription rate within 24 hours prior to the end of the current period.
+                <strong>Account Charges for Renewal:</strong> Your account will be charged for renewal at the same subscription rate within 24 hours prior to the end of the current period.
+              </li>
+              <li>
+                <strong>Active Period Cancellations:</strong> No cancellation of the current subscription is allowed during the active subscription period. If you cancel, your benefits remain active until the billing cycle ends.
+              </li>
+              <li>
+                <strong>Free Trial Terms:</strong> Any unused portion of a free trial period, if offered, will be forfeited when you purchase a subscription to that tier, where applicable.
               </li>
             </ul>
           </section>
