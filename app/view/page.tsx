@@ -78,6 +78,11 @@ function ViewContent() {
 
     const fetchAccess = async () => {
       try {
+        if (!activeToken) {
+          setError("No token provided");
+          return;
+        }
+
         setLoading(true);
         const response = await fetch("/api/grant-access", {
           method: "POST",
@@ -100,12 +105,6 @@ function ViewContent() {
         setLoading(false);
       }
     };
-
-    if (!activeToken) {
-      setError("No token provided");
-      setLoading(false);
-      return;
-    }
 
     fetchAccess();
   }, [searchParams]);
