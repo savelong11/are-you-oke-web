@@ -1,124 +1,399 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 
+const LANGUAGES = [
+  { code: "en", name: "English", flag: "🇺🇸" },
+  { code: "vi", name: "Tiếng Việt", flag: "🇻🇳" },
+  { code: "zh", name: "简体中文", flag: "🇨🇳" },
+  { code: "ja", name: "日本語", flag: "🇯🇵" },
+  { code: "ko", name: "한국어", flag: "🇰🇷" },
+  { code: "es", name: "Español", flag: "🇪🇸" },
+  { code: "pt", name: "Português", flag: "🇵🇹" },
+  { code: "hi", name: "हिन्दी", flag: "🇮🇳" },
+  { code: "id", name: "Bahasa Indonesia", flag: "🇮🇩" },
+];
+
+const LOCALES: Record<string, Record<string, string>> = {
+  en: {
+    title: "Terms of Use (EULA)",
+    lastUpdated: "Last Updated: May 26, 2026",
+    backHome: "← Back to Home",
+    sec1Title: "1. Agreement to Terms",
+    sec1Desc: 'By installing, accessing, or using the "Are You Okay?" mobile application or website, you agree to be bound by these Terms of Use and End User License Agreement (EULA). If you do not agree to these terms, do not install or use our application.',
+    sec2Title: "2. Standard EULA & Device Store Policies",
+    sec2Desc: "Depending on the platform you downloaded the application from, you are also bound by the standard device store terms:",
+    sec2Bullet1: '<strong>Apple App Store:</strong> Purchases and access are subject to Apple\'s Standard End User License Agreement (EULA) available at: <a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">https://www.apple.com/legal/internet-services/itunes/dev/stdeula/</a>.',
+    sec2Bullet2: '<strong>Google Play Store:</strong> Purchases and access are subject to the standard Google Play Terms of Service: <a href="https://play.google.com/intl/en_US/gplay/about/play-terms/index.html" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">https://play.google.com/intl/en_US/gplay/about/play-terms/index.html</a>.',
+    sec3Title: "3. Auto-Renewable Subscriptions & Billing",
+    sec3Desc: "Our application offers in-app purchases and auto-renewable subscriptions (Pro and Premium Tiers) to grant advanced features:",
+    sec3Bullet1: "<strong>Subscription Options & Periods:</strong> Options include Monthly (1 month) or Yearly (1 year) durations.",
+    sec3Bullet2: "<strong>Payment & Account Billing:</strong> Subscription payments are processed via Apple App Store / Google Play and are charged to your associated iTunes/Google Play Store account upon confirmation of purchase.",
+    sec3Bullet3: "<strong>Auto-Renewal:</strong> Subscriptions automatically renew unless auto-renew is turned off at least 24-hours before the end of the current period.",
+    sec3Bullet4: "<strong>Renewal Charges:</strong> Your account will be charged for renewal within 24-hours prior to the end of the current period at the rate of the selected plan.",
+    sec3Bullet5: "<strong>Active Period Cancellations:</strong> No cancellation of the current subscription is allowed during the active subscription period. If you cancel, your active subscription benefits remain functional until the end of the billing cycle.",
+    sec3Bullet6: "<strong>Free Trial Terms:</strong> Any unused portion of a free trial period, if offered, will be forfeited when you purchase a subscription to that tier, where applicable.",
+    sec3Bullet7: "<strong>Cancellation & Settings:</strong> You can manage or disable subscription auto-renewals at any time in your Apple ID or Google Play Store Account Settings after purchase. Refunds are processed and managed solely by the respective app stores.",
+    sec4Title: "4. Medical & Crisis Disclaimer (CRITICAL)",
+    sec4Desc: '<strong>⚠ IMPORTANT NOTICE:</strong> "Are You Okay?" is a personal self-help logging and mindfulness tool. It is **NOT** a medical diagnostic service, clinical treatment companion, or suicide prevention hotline. If you or someone you know is undergoing an acute psychological crisis, experiencing thoughts of self-harm, or facing a medical emergency, please immediately contact emergency services or reach out to a professional mental health hotline: <br /><br /> • <strong>Vietnam Helpline:</strong> 1800 599 920 (Free, 24/7) <br /> • <strong>International Helplines:</strong> befrienders.org / suicide.org',
+    sec5Title: "5. Trusted Contacts & Notifications",
+    sec5Desc: 'If you configure a "trusted contact", you authorize our server to securely send them an notification email containing a secure link to access your mood log history if you fail to check in for your designated duration. You are solely responsible for ensuring the contact details you enter are correct and that you have obtained the contact\'s permission to be designated.',
+    sec6Title: "6. Intellectual Property",
+    sec6Desc: 'All software code, visual designs, assets, logo iconography, and trademark designations of "Are You Okay?" remain the exclusive intellectual property of our development team. You are granted a limited, personal, non-transferable, revocable license to use the app for personal, non-commercial purposes.',
+    sec7Title: "7. Governing Law",
+    sec7Desc: "These terms are governed by and construed in accordance with the applicable consumer and technology laws of the developer's jurisdiction, alongside international App Store and Google Play merchant compliance guidelines.",
+    footerRights: "© 2026 Are You Okay? Team. All rights reserved.",
+  },
+  vi: {
+    title: "Điều khoản Sử dụng (EULA)",
+    lastUpdated: "Cập nhật lần cuối: 26 tháng 5, 2026",
+    backHome: "← Quay lại trang chủ",
+    sec1Title: "1. Chấp thuận Điều khoản",
+    sec1Desc: 'Bằng cách cài đặt, truy cập hoặc sử dụng ứng dụng di động hoặc trang web "Are You Okay?", bạn đồng ý bị ràng buộc bởi các Điều khoản Sử dụng và Thỏa thuận Cấp phép Người dùng Cuối (EULA) này. Nếu bạn không đồng ý với các điều khoản này, vui lòng không cài đặt hoặc sử dụng ứng dụng của chúng tôi.',
+    sec2Title: "2. EULA Tiêu chuẩn & Chính sách Cửa hàng Ứng dụng",
+    sec2Desc: "Tùy thuộc vào nền tảng bạn tải ứng dụng, bạn cũng bị ràng buộc bởi các điều khoản cửa hàng thiết bị tiêu chuẩn:",
+    sec2Bullet1: '<strong>Apple App Store:</strong> Các giao dịch mua và quyền truy cập tuân theo Thỏa thuận Cấp phép Người dùng Cuối (EULA) Tiêu chuẩn của Apple có tại: <a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">https://www.apple.com/legal/internet-services/itunes/dev/stdeula/</a>.',
+    sec2Bullet2: '<strong>Google Play Store:</strong> Các giao dịch mua và quyền truy cập tuân theo Điều khoản Dịch vụ Google Play tiêu chuẩn: <a href="https://play.google.com/intl/en_US/gplay/about/play-terms/index.html" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">https://play.google.com/intl/en_US/gplay/about/play-terms/index.html</a>.',
+    sec3Title: "3. Đăng ký Tự động Gia hạn & Thanh toán",
+    sec3Desc: "Ứng dụng của chúng tôi cung cấp các giao dịch mua trong ứng dụng và gói đăng ký tự động gia hạn (Pro và Premium) để cấp các tính năng nâng cao:",
+    sec3Bullet1: "<strong>Tùy chọn & Thời hạn Đăng ký:</strong> Các tùy chọn bao gồm gói Tháng (1 tháng) hoặc Năm (1 năm).",
+    sec3Bullet2: "<strong>Thanh toán & Hóa đơn Tài khoản:</strong> Thanh toán đăng ký được xử lý qua Apple App Store / Google Play và được tính vào tài khoản iTunes/Google Play Store của bạn khi xác nhận mua hàng.",
+    sec3Bullet3: "<strong>Tự động Gia hạn:</strong> Gói đăng ký tự động gia hạn trừ khi tắt tính năng tự động gia hạn ít nhất 24 giờ trước khi kết thúc kỳ hiện tại.",
+    sec3Bullet4: "<strong>Phí Gia hạn:</strong> Tài khoản của bạn sẽ bị tính phí gia hạn trong vòng 24 giờ trước khi kết thúc kỳ hiện tại theo mức giá của gói đã chọn.",
+    sec3Bullet5: "<strong>Hủy trong Kỳ Hoạt động:</strong> Không được phép hủy đăng ký hiện tại trong thời gian đăng ký đang hoạt động. Nếu bạn hủy, quyền lợi đăng ký đang hoạt động của bạn vẫn có hiệu lực cho đến khi kết thúc chu kỳ thanh toán.",
+    sec3Bullet6: "<strong>Điều khoản Dùng thử Miễn phí:</strong> Bất kỳ phần nào chưa sử dụng của thời gian dùng thử miễn phí, nếu được cung cấp, sẽ bị mất khi bạn mua gói đăng ký cho hạng đó, nếu có.",
+    sec3Bullet7: "<strong>Hủy & Cài đặt:</strong> Bạn có thể quản lý hoặc tắt tính năng tự động gia hạn đăng ký bất kỳ lúc nào trong Cài đặt Tài khoản Apple ID hoặc Google Play Store sau khi mua. Hoàn tiền được xử lý và quản lý hoàn toàn bởi các cửa hàng ứng dụng tương ứng.",
+    sec4Title: "4. Tuyên bố Miễn trừ Y tế & Khủng hoảng (QUAN TRỌNG)",
+    sec4Desc: '<strong>⚠ THÔNG BÁO QUAN TRỌNG:</strong> "Are You Okay?" là một công cụ tự theo dõi và chánh niệm cá nhân. Nó KHÔNG phải là dịch vụ chẩn đoán y tế, đồng hành điều trị lâm sàng hay đường dây nóng ngăn chặn tự tử. Nếu bạn hoặc người quen đang trải qua khủng hoảng tâm lý cấp tính, có ý nghĩ tự làm hại bản thân hoặc đang đối mặt với trường hợp khẩn cấp y tế, vui lòng liên hệ ngay với dịch vụ cấp cứu hoặc đường dây nóng sức khỏe tâm thần chuyên nghiệp: <br /><br /> • <strong>Đường dây nóng Việt Nam:</strong> 1800 599 920 (Miễn phí, 24/7) <br /> • <strong>Đường dây nóng Quốc tế:</strong> befrienders.org / suicide.org',
+    sec5Title: "5. Liên hệ Đáng tin cậy & Thông báo",
+    sec5Desc: 'Nếu bạn cấu hình "liên hệ đáng tin cậy", bạn cho phép máy chủ của chúng tôi gửi email thông báo an toàn cho họ chứa liên kết an toàn để truy cập lịch sử nhật ký cảm xúc của bạn nếu bạn không check-in trong thời gian đã định. Bạn hoàn toàn chịu trách nhiệm đảm bảo thông tin liên hệ bạn nhập là chính xác và bạn đã được sự cho phép của người đó để được chỉ định.',
+    sec6Title: "6. Sở hữu Trí tuệ",
+    sec6Desc: 'Tất cả mã nguồn phần mềm, thiết kế trực quan, tài sản, biểu tượng logo và chỉ định nhãn hiệu của "Are You Okay?" vẫn là tài sản trí tuệ độc quyền của nhóm phát triển chúng tôi. Bạn được cấp giấy phép hạn chế, cá nhân, không chuyển nhượng, có thể thu hồi để sử dụng ứng dụng cho mục đích cá nhân, phi thương mại.',
+    sec7Title: "7. Luật Điều chỉnh",
+    sec7Desc: "Các điều khoản này được điều chỉnh và giải thích theo luật bảo vệ người tiêu dùng và công nghệ áp dụng của khu vực tài phán của nhà phát triển, cùng với các hướng dẫn tuân thủ thương mại quốc tế của App Store và Google Play.",
+    footerRights: "© 2026 Are You Okay? Team. Tất cả các quyền được bảo lưu.",
+  },
+  zh: {
+    title: "使用条款 (EULA)",
+    lastUpdated: "最后更新：2026年5月26日",
+    backHome: "← 返回首页",
+    sec1Title: "1. 同意条款",
+    sec1Desc: '通过安装、访问或使用"Are You Okay?"移动应用或网站，您同意受这些使用条款和最终用户许可协议（EULA）的约束。如果您不同意这些条款，请勿安装或使用我们的应用程序。',
+    sec2Title: "2. 标准EULA与设备商店政策",
+    sec2Desc: "根据您下载应用的平台，您还受标准设备商店条款的约束：",
+    sec2Bullet1: '<strong>Apple App Store：</strong>购买和访问受Apple标准最终用户许可协议（EULA）约束，网址为：<a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">https://www.apple.com/legal/internet-services/itunes/dev/stdeula/</a>。',
+    sec2Bullet2: '<strong>Google Play Store：</strong>购买和访问受标准Google Play服务条款约束：<a href="https://play.google.com/intl/en_US/gplay/about/play-terms/index.html" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">https://play.google.com/intl/en_US/gplay/about/play-terms/index.html</a>。',
+    sec3Title: "3. 自动续订订阅与计费",
+    sec3Desc: "我们的应用程序提供应用内购买和自动续订订阅（专业版和高级版）以授予高级功能：",
+    sec3Bullet1: "<strong>订阅选项与期限：</strong>选项包括月度（1个月）或年度（1年）。",
+    sec3Bullet2: "<strong>付款与账户计费：</strong>订阅付款通过Apple App Store/Google Play处理，并在确认购买后从您的iTunes/Google Play商店账户中扣款。",
+    sec3Bullet3: "<strong>自动续订：</strong>除非在当前期限结束前至少24小时关闭自动续订，否则订阅将自动续订。",
+    sec3Bullet4: "<strong>续订费用：</strong>您的账户将在当前期限结束前24小时内按所选计划费率收取续订费用。",
+    sec3Bullet5: "<strong>有效期内取消：</strong>在有效订阅期内不允许取消当前订阅。如果您取消，您的有效订阅权益将持续到计费周期结束。",
+    sec3Bullet6: "<strong>免费试用条款：</strong>任何未使用的免费试用期部分（如提供）将在您购买该等级订阅时作废。",
+    sec3Bullet7: "<strong>取消与设置：</strong>购买后，您可以随时在Apple ID或Google Play商店账户设置中管理或禁用订阅自动续订。退款由相应的应用商店单独处理和管理。",
+    sec4Title: "4. 医疗与危机免责声明（重要）",
+    sec4Desc: '<strong>⚠ 重要通知：</strong>"Are You Okay?"是一个个人自助记录和正念工具。它**不是**医疗诊断服务、临床治疗伴侣或自杀预防热线。如果您或您认识的人正在经历急性心理危机、有自残想法或面临医疗紧急情况，请立即联系紧急服务或专业心理健康热线：<br /><br /> • <strong>越南热线：</strong>1800 599 920（免费，24/7）<br /> • <strong>国际热线：</strong>befrienders.org / suicide.org',
+    sec5Title: "5. 可信联系人与通知",
+    sec5Desc: '如果您配置了"可信联系人"，您授权我们的服务器在您未在指定时间内签到时，安全地向他们发送包含安全链接的通知电子邮件，以便访问您的情绪日志历史。您全权负责确保您输入的联系方式正确，并且您已获得该联系人被指定的许可。',
+    sec6Title: "6. 知识产权",
+    sec6Desc: '"Are You Okay?"的所有软件代码、视觉设计、资产、标志图标和商标标识仍是我们开发团队的独家知识产权。您被授予有限的、个人的、不可转让的、可撤销的许可，将应用程序用于个人非商业目的。',
+    sec7Title: "7. 管辖法律",
+    sec7Desc: "这些条款受开发者司法管辖区的适用消费者和技术法律以及国际App Store和Google Play商家合规指南的管辖和解释。",
+    footerRights: "© 2026 Are You Okay? 团队。保留所有权利。",
+  },
+  ja: {
+    title: "利用規約 (EULA)",
+    lastUpdated: "最終更新日: 2026年5月26日",
+    backHome: "← ホームに戻る",
+    sec1Title: "1. 規約への同意",
+    sec1Desc: '"Are You Okay?"モバイルアプリケーションまたはウェブサイトをインストール、アクセス、または使用することにより、お客様はこれらの利用規約およびエンドユーザーライセンス契約（EULA）に拘束されることに同意するものとします。これらの規約に同意しない場合は、アプリケーションをインストールまたは使用しないでください。',
+    sec2Title: "2. 標準EULAおよびデバイスストアポリシー",
+    sec2Desc: "アプリケーションをダウンロードしたプラットフォームに応じて、お客様は標準的なデバイスストアの規約にも拘束されます：",
+    sec2Bullet1: '<strong>Apple App Store：</strong>購入およびアクセスは、Appleの標準エンドユーザーライセンス契約（EULA）に従います：<a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">https://www.apple.com/legal/internet-services/itunes/dev/stdeula/</a>。',
+    sec2Bullet2: '<strong>Google Play Store：</strong>購入およびアクセスは、標準のGoogle Play利用規約に従います：<a href="https://play.google.com/intl/en_US/gplay/about/play-terms/index.html" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">https://play.google.com/intl/en_US/gplay/about/play-terms/index.html</a>。',
+    sec3Title: "3. 自動更新サブスクリプションと請求",
+    sec3Desc: "当社のアプリケーションでは、高度な機能を提供するためにアプリ内購入と自動更新サブスクリプション（ProおよびPremiumプラン）を提供しています：",
+    sec3Bullet1: "<strong>サブスクリプションのオプションと期間：</strong>月額（1ヶ月）または年額（1年）からお選びいただけます。",
+    sec3Bullet2: "<strong>支払いとアカウント請求：</strong>サブスクリプションの支払いはApple App Store/Google Playを介して処理され、購入確認時に関連するiTunes/Google Play Storeアカウントに請求されます。",
+    sec3Bullet3: "<strong>自動更新：</strong>現在の期間終了の少なくとも24時間前に自動更新をオフにしない限り、サブスクリプションは自動的に更新されます。",
+    sec3Bullet4: "<strong>更新料金：</strong>現在の期間終了前24時間以内に、選択したプランの料金でアカウントに更新料金が請求されます。",
+    sec3Bullet5: "<strong>有効期間中の解約：</strong>有効なサブスクリプション期間中は現在のサブスクリプションをキャンセルすることはできません。キャンセルした場合でも、アクティブなサブスクリプション特典は請求サイクルの終了まで機能します。",
+    sec3Bullet6: "<strong>無料トライアル条件：</strong>無料トライアル期間の未使用部分は、該当する場合、そのプランのサブスクリプションを購入すると失効します。",
+    sec3Bullet7: "<strong>キャンセルと設定：</strong>購入後、Apple IDまたはGoogle Play Storeのアカウント設定でいつでもサブスクリプションの自動更新を管理または無効にできます。返金はそれぞれのアプリストアによってのみ処理および管理されます。",
+    sec4Title: "4. 医療および危機に関する免責事項（重要）",
+    sec4Desc: '<strong>⚠ 重要なお知らせ：</strong>"Are You Okay?"は個人のセルフヘルプ記録およびマインドフルネスツールです。これは医療診断サービス、臨床治療の補助、または自殺防止ホットラインでは**ありません**。あなたまたはあなたの知り合いが急性の心理的危機、自傷行為の考え、または医療緊急事態に直面している場合は、直ちに緊急サービスまたは専門のメンタルヘルスホットラインに連絡してください：<br /><br /> • <strong>ベトナムホットライン：</strong>1800 599 920（無料、24時間年中無休）<br /> • <strong>国際ホットライン：</strong>befrienders.org / suicide.org',
+    sec5Title: "5. 信頼できる連絡先と通知",
+    sec5Desc: '"信頼できる連絡先"を設定すると、指定した期間内にチェックインがない場合、サーバーが安全にメール通知を送信し、気分ログ履歴にアクセスするための安全なリンクを提供することを許可することになります。入力する連絡先詳細が正確であり、指定されることについて連絡先の許可を得ていることを保証する責任はお客様にあります。',
+    sec6Title: "6. 知的財産",
+    sec6Desc: '"Are You Okay?"のすべてのソフトウェアコード、ビジュアルデザイン、アセット、ロゴの図案、および商標表示は、当社の開発チームの独占的な知的財産です。お客様には、個人的かつ非商業的な目的でアプリを使用するための、限定的、個人的、譲渡不可、取消可能なライセンスが付与されます。',
+    sec7Title: "7. 準拠法",
+    sec7Desc: "これらの規約は、開発者の管轄区域の該当する消費者および技術法、ならびに国際的なApp StoreおよびGoogle Playのマーチャントコンプライアンスガイドラインに従って解釈されます。",
+    footerRights: "© 2026 Are You Okay? チーム。無断転載を禁じます。",
+  },
+  ko: {
+    title: "이용 약관 (EULA)",
+    lastUpdated: "최근 업데이트: 2026년 5월 26일",
+    backHome: "← 홈으로 돌아가기",
+    sec1Title: "1. 약관 동의",
+    sec1Desc: '"Are You Okay?" 모바일 애플리케이션 또는 웹사이트를 설치, 액세스 또는 사용함으로써 귀하는 본 이용 약관 및 최종 사용자 라이선스 계약(EULA)에 구속되는 데 동의합니다. 본 약관에 동의하지 않는 경우 애플리케이션을 설치하거나 사용하지 마십시오.',
+    sec2Title: "2. 표준 EULA 및 디바이스 스토어 정책",
+    sec2Desc: "애플리케이션을 다운로드한 플랫폼에 따라 귀하는 또한 표준 디바이스 스토어 약관에 구속됩니다:",
+    sec2Bullet1: '<strong>Apple App Store:</strong> 구매 및 액세스는 Apple의 표준 최종 사용자 라이선스 계약(EULA)이 적용됩니다: <a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">https://www.apple.com/legal/internet-services/itunes/dev/stdeula/</a>.',
+    sec2Bullet2: '<strong>Google Play Store:</strong> 구매 및 액세스는 표준 Google Play 서비스 약관이 적용됩니다: <a href="https://play.google.com/intl/en_US/gplay/about/play-terms/index.html" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">https://play.google.com/intl/en_US/gplay/about/play-terms/index.html</a>.',
+    sec3Title: "3. 자동 갱신 구독 및 결제",
+    sec3Desc: "당사 애플리케이션은 고급 기능을 제공하기 위해 인앱 구매 및 자동 갱신 구독(Pro 및 Premium 등급)을 제공합니다:",
+    sec3Bullet1: "<strong>구독 옵션 및 기간:</strong> 옵션에는 월간(1개월) 또는 연간(1년)이 포함됩니다.",
+    sec3Bullet2: "<strong>결제 및 계정 청구:</strong> 구독 결제는 Apple App Store/Google Play를 통해 처리되며 구매 확인 시 관련 iTunes/Google Play Store 계정으로 청구됩니다.",
+    sec3Bullet3: "<strong>자동 갱신:</strong> 현재 기간 종료 최소 24시간 전에 자동 갱신을 해제하지 않으면 구독이 자동으로 갱신됩니다.",
+    sec3Bullet4: "<strong>갱신 요금:</strong> 현재 기간 종료 전 24시간 이내에 선택한 요금제 요율로 갱신 요금이 청구됩니다.",
+    sec3Bullet5: "<strong>활성 기간 취소:</strong> 활성 구독 기간 중에는 현재 구독을 취소할 수 없습니다. 취소하는 경우, 활성 구독 혜택은 청구 주기가 종료될 때까지 유지됩니다.",
+    sec3Bullet6: "<strong>무료 체험 조건:</strong> 무료 체험 기간의 사용하지 않은 부분은 해당하는 경우, 해당 등급의 구독을 구매할 때 상실됩니다.",
+    sec3Bullet7: "<strong>취소 및 설정:</strong> 구매 후 Apple ID 또는 Google Play Store 계정 설정에서 언제든지 구독 자동 갱신을 관리하거나 비활성화할 수 있습니다. 환불은 각 앱 스토어에서만 처리 및 관리됩니다.",
+    sec4Title: "4. 의료 및 위기 면책 조항 (중요)",
+    sec4Desc: '<strong>⚠ 중요 공지:</strong> "Are You Okay?"는 개인 셀프헬프 기록 및 마음챙김 도구입니다. 이는 의료 진단 서비스, 임상 치료 동반자 또는 자살 예방 핫라인이 **아닙니다**. 귀하 또는 귀하가 아는 사람이 급성 심리적 위기, 자해 생각을 경험하거나 의료 응급 상황에 직면한 경우, 즉시 응급 서비스에 연락하거나 전문 정신 건강 핫라인에 문의하십시오: <br /><br /> • <strong>베트남 핫라인:</strong> 1800 599 920 (무료, 24/7) <br /> • <strong>국제 핫라인:</strong> befrienders.org / suicide.org',
+    sec5Title: "5. 신뢰할 수 있는 연락처 및 알림",
+    sec5Desc: '"신뢰할 수 있는 연락처"를 구성하면 지정된 기간 내에 체크인하지 않을 경우 서버가 해당 연락처에 기분 로그 기록에 액세스할 수 있는 안전한 링크가 포함된 알림 이메일을 안전하게 보낼 수 있도록 승인하는 것입니다. 귀하가 입력한 연락처 세부 정보가 정확하고 해당 연락처의 지정 허가를 받았는지 확인할 책임은 전적으로 귀하에게 있습니다.',
+    sec6Title: "6. 지적 재산권",
+    sec6Desc: '"Are You Okay?"의 모든 소프트웨어 코드, 시각적 디자인, 자산, 로고 아이콘 및 상표 지정은 당사 개발 팀의 독점적 지적 재산으로 남습니다. 귀하는 개인적, 비상업적 목적으로 앱을 사용할 수 있는 제한적, 개인적, 양도 불가, 취소 가능한 라이선스를 부여받습니다.',
+    sec7Title: "7. 준거법",
+    sec7Desc: "본 약관은 개발자 관할권의 해당 소비자 및 기술 법률과 국제 App Store 및 Google Play 판매자 준수 지침에 따라 해석됩니다.",
+    footerRights: "© 2026 Are You Okay? 팀. All rights reserved.",
+  },
+  es: {
+    title: "Términos de Uso (EULA)",
+    lastUpdated: "Última actualización: 26 de mayo de 2026",
+    backHome: "← Volver al inicio",
+    sec1Title: "1. Aceptación de los Términos",
+    sec1Desc: 'Al instalar, acceder o utilizar la aplicación móvil o el sitio web "Are You Okay?", usted acepta estar sujeto a estos Términos de Uso y Contrato de Licencia de Usuario Final (EULA). Si no acepta estos términos, no instale ni utilice nuestra aplicación.',
+    sec2Title: "2. EULA Estándar y Políticas de la Tienda de Dispositivos",
+    sec2Desc: "Según la plataforma desde la que descargó la aplicación, también estará sujeto a los términos estándar de la tienda de dispositivos:",
+    sec2Bullet1: '<strong>Apple App Store:</strong> Las compras y el acceso están sujetos al Contrato de Licencia de Usuario Final (EULA) Estándar de Apple disponible en: <a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">https://www.apple.com/legal/internet-services/itunes/dev/stdeula/</a>.',
+    sec2Bullet2: '<strong>Google Play Store:</strong> Las compras y el acceso están sujetos a los Términos de Servicio estándar de Google Play: <a href="https://play.google.com/intl/en_US/gplay/about/play-terms/index.html" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">https://play.google.com/intl/en_US/gplay/about/play-terms/index.html</a>.',
+    sec3Title: "3. Suscripciones de Renovación Automática y Facturación",
+    sec3Desc: "Nuestra aplicación ofrece compras integradas y suscripciones de renovación automática (niveles Pro y Premium) para otorgar funciones avanzadas:",
+    sec3Bullet1: "<strong>Opciones y Períodos de Suscripción:</strong> Las opciones incluyen duraciones Mensual (1 mes) o Anual (1 año).",
+    sec3Bullet2: "<strong>Pago y Facturación de Cuenta:</strong> Los pagos de suscripción se procesan a través de Apple App Store/Google Play y se cargan a su cuenta de iTunes/Google Play Store asociada tras la confirmación de la compra.",
+    sec3Bullet3: "<strong>Renovación Automática:</strong> Las suscripciones se renuevan automáticamente a menos que la renovación automática se desactive al menos 24 horas antes del final del período actual.",
+    sec3Bullet4: "<strong>Cargos de Renovación:</strong> Se le cobrará la renovación en su cuenta dentro de las 24 horas anteriores al final del período actual según la tarifa del plan seleccionado.",
+    sec3Bullet5: "<strong>Cancelaciones en Período Activo:</strong> No se permite la cancelación de la suscripción actual durante el período de suscripción activa. Si cancela, los beneficios de su suscripción activa seguirán siendo funcionales hasta el final del ciclo de facturación.",
+    sec3Bullet6: "<strong>Términos de Prueba Gratuita:</strong> Cualquier porción no utilizada de un período de prueba gratuita, si se ofrece, se perderá cuando compre una suscripción a ese nivel, cuando corresponda.",
+    sec3Bullet7: "<strong>Cancelación y Configuración:</strong> Puede administrar o deshabilitar las renovaciones automáticas de suscripciones en cualquier momento en la Configuración de su cuenta de Apple ID o Google Play Store después de la compra. Los reembolsos son procesados y gestionados únicamente por las respectivas tiendas de aplicaciones.",
+    sec4Title: "4. Exención de Responsabilidad Médica y de Crisis (CRÍTICA)",
+    sec4Desc: '<strong>⚠ AVISO IMPORTANTE:</strong> "Are You Okay?" es una herramienta personal de autoayuda y atención plena. **NO** es un servicio de diagnóstico médico, acompañante de tratamiento clínico o línea directa de prevención del suicidio. Si usted o alguien que conoce está experimentando una crisis psicológica aguda, pensamientos de autolesión o se enfrenta a una emergencia médica, comuníquese inmediatamente con los servicios de emergencia o con una línea directa profesional de salud mental: <br /><br /> • <strong>Línea de ayuda de Vietnam:</strong> 1800 599 920 (Gratuita, 24/7) <br /> • <strong>Líneas de ayuda internacionales:</strong> befrienders.org / suicide.org',
+    sec5Title: "5. Contactos de Confianza y Notificaciones",
+    sec5Desc: 'Si configura un "contacto de confianza", autoriza a nuestro servidor a enviarle de forma segura un correo electrónico de notificación que contenga un enlace seguro para acceder a su historial de registro de estado de ánimo si no se registra durante el período designado. Usted es el único responsable de asegurarse de que los datos de contacto que ingresa sean correctos y de haber obtenido el permiso del contacto para ser designado.',
+    sec6Title: "6. Propiedad Intelectual",
+    sec6Desc: 'Todos los códigos de software, diseños visuales, activos, iconografía de logotipos y designaciones de marca de "Are You Okay?" siguen siendo propiedad intelectual exclusiva de nuestro equipo de desarrollo. Se le otorga una licencia limitada, personal, intransferible y revocable para usar la aplicación con fines personales y no comerciales.',
+    sec7Title: "7. Ley Aplicable",
+    sec7Desc: "Estos términos se rigen e interpretan de acuerdo con las leyes de consumo y tecnología aplicables de la jurisdicción del desarrollador, junto con las pautas internacionales de cumplimiento de comerciantes de App Store y Google Play.",
+    footerRights: "© 2026 Are You Okay? Team. Todos los derechos reservados.",
+  },
+  pt: {
+    title: "Termos de Utilização (EULA)",
+    lastUpdated: "Última atualização: 26 de maio de 2026",
+    backHome: "← Voltar ao início",
+    sec1Title: "1. Aceitação dos Termos",
+    sec1Desc: 'Ao instalar, aceder ou utilizar a aplicação móvel ou o site "Are You Okay?", concorda em ficar vinculado por estes Termos de Utilização e Contrato de Licença de Utilizador Final (EULA). Se não concordar com estes termos, não instale nem utilize a nossa aplicação.',
+    sec2Title: "2. EULA Padrão e Políticas da Loja de Dispositivos",
+    sec2Desc: "Dependendo da plataforma onde descarregou a aplicação, também está vinculado pelos termos padrão da loja de dispositivos:",
+    sec2Bullet1: '<strong>Apple App Store:</strong> As compras e o acesso estão sujeitos ao Contrato de Licença de Utilizador Final (EULA) Padrão da Apple disponível em: <a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">https://www.apple.com/legal/internet-services/itunes/dev/stdeula/</a>.',
+    sec2Bullet2: '<strong>Google Play Store:</strong> As compras e o acesso estão sujeitos aos Termos de Serviço padrão do Google Play: <a href="https://play.google.com/intl/en_US/gplay/about/play-terms/index.html" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">https://play.google.com/intl/en_US/gplay/about/play-terms/index.html</a>.',
+    sec3Title: "3. Subscrições de Renovação Automática e Faturação",
+    sec3Desc: "A nossa aplicação oferece compras na aplicação e subscrições de renovação automática (níveis Pro e Premium) para conceder funcionalidades avançadas:",
+    sec3Bullet1: "<strong>Opções e Períodos de Subscrição:</strong> As opções incluem durações Mensal (1 mês) ou Anual (1 ano).",
+    sec3Bullet2: "<strong>Pagamento e Faturação de Conta:</strong> Os pagamentos de subscrição são processados através da Apple App Store/Google Play e cobrados na sua conta iTunes/Google Play Store associada após confirmação da compra.",
+    sec3Bullet3: "<strong>Renovação Automática:</strong> As subscrições renovam-se automaticamente, a menos que a renovação automática seja desativada pelo menos 24 horas antes do final do período atual.",
+    sec3Bullet4: "<strong>Encargos de Renovação:</strong> A sua conta será cobrada pela renovação dentro de 24 horas antes do final do período atual à taxa do plano selecionado.",
+    sec3Bullet5: "<strong>Cancelamentos em Período Ativo:</strong> Não é permitido o cancelamento da subscrição atual durante o período de subscrição ativa. Se cancelar, os benefícios da sua subscrição ativa permanecem funcionais até ao final do ciclo de faturação.",
+    sec3Bullet6: "<strong>Termos de Período de Teste Gratuito:</strong> Qualquer parte não utilizada de um período de teste gratuito, se oferecido, será perdida quando adquirir uma subscrição nesse nível, quando aplicável.",
+    sec3Bullet7: "<strong>Cancelamento e Definições:</strong> Pode gerir ou desativar as renovações automáticas de subscrições em qualquer momento nas Definições da sua conta Apple ID ou Google Play Store após a compra. Os reembolsos são processados e geridos exclusivamente pelas respetivas lojas de aplicações.",
+    sec4Title: "4. Isenção de Responsabilidade Médica e de Crise (CRÍTICA)",
+    sec4Desc: '<strong>⚠ AVISO IMPORTANTE:</strong> "Are You Okay?" é uma ferramenta pessoal de autoajuda e atenção plena. **NÃO** é um serviço de diagnóstico médico, acompanhante de tratamento clínico ou linha direta de prevenção de suicídio. Se você ou alguém que conhece está a passar por uma crise psicológica aguda, pensamentos de autoagressão ou uma emergência médica, contacte imediatamente os serviços de emergência ou uma linha direta profissional de saúde mental: <br /><br /> • <strong>Linha de Apoio do Vietname:</strong> 1800 599 920 (Grátis, 24/7) <br /> • <strong>Linhas de Apoio Internacionais:</strong> befrienders.org / suicide.org',
+    sec5Title: "5. Contactos de Confiança e Notificações",
+    sec5Desc: 'Se configurar um "contacto de confiança", autoriza o nosso servidor a enviar-lhes um email de notificação seguro contendo um link seguro para aceder ao seu histórico de registo de humor se não fizer o check-in dentro do período designado. É o único responsável por garantir que os detalhes de contacto que introduz estão corretos e que obteve a permissão do contacto para ser designado.',
+    sec6Title: "6. Propriedade Intelectual",
+    sec6Desc: 'Todo o código de software, designs visuais, ativos, iconografia do logótipo e designações de marca de "Are You Okay?" permanecem propriedade intelectual exclusiva da nossa equipa de desenvolvimento. É-lhe concedida uma licença limitada, pessoal, intransferível e revogável para utilizar a aplicação para fins pessoais e não comerciais.',
+    sec7Title: "7. Lei Aplicável",
+    sec7Desc: "Estes termos são regidos e interpretados de acordo com as leis de consumo e tecnologia aplicáveis da jurisdição do programador, juntamente com as diretrizes internacionais de conformidade de comerciantes da App Store e Google Play.",
+    footerRights: "© 2026 Are You Okay? Team. Todos os direitos reservados.",
+  },
+  hi: {
+    title: "उपयोग की शर्तें (EULA)",
+    lastUpdated: "अंतिम अपडेट: 26 मई, 2026",
+    backHome: "← मुख्य पृष्ठ पर जाएं",
+    sec1Title: "1. शर्तों के लिए सहमति",
+    sec1Desc: '"Are You Okay?" मोबाइल एप्लिकेशन या वेबसाइट को स्थापित, एक्सेस या उपयोग करके, आप इन उपयोग की शर्तों और अंतिम-उपयोगकर्ता लाइसेंस समझौते (EULA) से बंधने के लिए सहमत होते हैं। यदि आप इन शर्तों से सहमत नहीं हैं, तो हमारे एप्लिकेशन को स्थापित या उपयोग न करें।',
+    sec2Title: "2. मानक EULA और डिवाइस स्टोर नीतियां",
+    sec2Desc: "आप जिस प्लेटफ़ॉर्म से एप्लिकेशन डाउनलोड करते हैं, उसके आधार पर आप मानक डिवाइस स्टोर शर्तों से भी बंधे होते हैं:",
+    sec2Bullet1: '<strong>Apple App Store:</strong> खरीदारी और पहुंच Apple के मानक अंतिम-उपयोगकर्ता लाइसेंस समझौते (EULA) के अधीन है, जो यहां उपलब्ध है: <a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">https://www.apple.com/legal/internet-services/itunes/dev/stdeula/</a>।',
+    sec2Bullet2: '<strong>Google Play Store:</strong> खरीदारी और पहुंच मानक Google Play सेवा की शर्तों के अधीन है: <a href="https://play.google.com/intl/en_US/gplay/about/play-terms/index.html" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">https://play.google.com/intl/en_US/gplay/about/play-terms/index.html</a>।',
+    sec3Title: "3. ऑटो-नवीकरणीय सदस्यता और बिलिंग",
+    sec3Desc: "हमारा एप्लिकेशन उन्नत सुविधाएं प्रदान करने के लिए इन-ऐप खरीदारी और ऑटो-नवीकरणीय सदस्यता (Pro और Premium टियर) प्रदान करता है:",
+    sec3Bullet1: "<strong>सदस्यता विकल्प और अवधि:</strong> विकल्पों में मासिक (1 महीना) या वार्षिक (1 वर्ष) शामिल हैं।",
+    sec3Bullet2: "<strong>भुगतान और खाता बिलिंग:</strong> सदस्यता भुगतान Apple App Store/Google Play के माध्यम से संसाधित होते हैं और खरीद की पुष्टि पर आपके संबद्ध iTunes/Google Play Store खाते से लिए जाते हैं।",
+    sec3Bullet3: "<strong>स्वचालित नवीनीकरण:</strong> सदस्यताएं स्वचालित रूप से नवीनीकृत होती हैं जब तक कि वर्तमान अवधि की समाप्ति से कम से कम 24 घंटे पहले ऑटो-रिन्यू बंद न कर दिया जाए।",
+    sec3Bullet4: "<strong>नवीनीकरण शुल्क:</strong> वर्तमान अवधि की समाप्ति से 24 घंटे के भीतर चयनित योजना की दर से आपके खाते से नवीनीकरण शुल्क लिया जाएगा।",
+    sec3Bullet5: "<strong>सक्रिय अवधि रद्दीकरण:</strong> सक्रिय सदस्यता अवधि के दौरान वर्तमान सदस्यता को रद्द करने की अनुमति नहीं है। यदि आप रद्द करते हैं, तो आपकी सक्रिय सदस्यता लाभ बिलिंग चक्र के अंत तक कार्यशील रहेंगे।",
+    sec3Bullet6: "<strong>निःशुल्क परीक्षण शर्तें:</strong> निःशुल्क परीक्षण अवधि का कोई भी अप्रयुक्त भाग, यदि प्रदान किया गया है, तो जब आप उस टियर की सदस्यता खरीदते हैं तो जब्त कर लिया जाएगा, जहां लागू हो।",
+    sec3Bullet7: "<strong>रद्दीकरण और सेटिंग्स:</strong> आप खरीद के बाद अपनी Apple ID या Google Play Store खाता सेटिंग्स में किसी भी समय सदस्यता ऑटो-नवीनीकरण प्रबंधित या अक्षम कर सकते हैं। रिफंड पूरी तरह से संबंधित ऐप स्टोर द्वारा संसाधित और प्रबंधित किए जाते हैं।",
+    sec4Title: "4. चिकित्सा और संकट अस्वीकरण (महत्वपूर्ण)",
+    sec4Desc: '<strong>⚠ महत्वपूर्ण सूचना:</strong> "Are You Okay?" एक व्यक्तिगत स्व-सहायता लॉगिंग और माइंडफुलनेस टूल है। यह चिकित्सा निदान सेवा, नैदानिक उपचार साथी या आत्महत्या रोकथाम हॉटलाइन **नहीं** है। यदि आप या आपका कोई परिचित तीव्र मनोवैज्ञानिक संकट, आत्म-हानि के विचारों का अनुभव कर रहा है या चिकित्सा आपात स्थिति का सामना कर रहा है, तो कृपया तुरंत आपातकालीन सेवाओं या पेशेवर मानसिक स्वास्थ्य हॉटलाइन से संपर्क करें: <br /><br /> • <strong>वियतनाम हेल्पलाइन:</strong> 1800 599 920 (निःशुल्क, 24/7) <br /> • <strong>अंतर्राष्ट्रीय हेल्पलाइन:</strong> befrienders.org / suicide.org',
+    sec5Title: "5. विश्वसनीय संपर्क और सूचनाएं",
+    sec5Desc: 'यदि आप "विश्वसनीय संपर्क" कॉन्फ़िगर करते हैं, तो आप हमारे सर्वर को अधिकृत करते हैं कि यदि आप अपनी निर्धारित अवधि के लिए चेक इन करने में विफल रहते हैं तो वह आपके मूड लॉग इतिहास तक पहुंचने के लिए एक सुरक्षित लिंक वाला सूचना ईमेल सुरक्षित रूप से भेज सके। आपके द्वारा दर्ज किए गए संपर्क विवरण सही हैं और आपने संपर्क से नामांकित होने की अनुमति प्राप्त कर ली है, यह सुनिश्चित करने की पूरी जिम्मेदारी आपकी है।',
+    sec6Title: "6. बौद्धिक संपदा",
+    sec6Desc: '"Are You Okay?" के सभी सॉफ़्टवेयर कोड, दृश्य डिज़ाइन, संपत्ति, लोगो आइकनोग्राफी और ट्रेडमार्क पदनाम हमारी विकास टीम की अनन्य बौद्धिक संपदा बने हुए हैं। आपको व्यक्तिगत, गैर-व्यावसायिक उद्देश्यों के लिए एप्लिकेशन का उपयोग करने के लिए एक सीमित, व्यक्तिगत, गैर-हस्तांतरणीय, प्रतिसंहरणीय लाइसेंस प्रदान किया जाता है।',
+    sec7Title: "7. शासक कानून",
+    sec7Desc: "ये शर्तें डेवलपर के अधिकार क्षेत्र के लागू उपभोक्ता और प्रौद्योगिकी कानूनों के साथ-साथ अंतर्राष्ट्रीय App Store और Google Play व्यापारी अनुपालन दिशानिर्देशों के अनुसार शासित और व्याख्या की जाती हैं।",
+    footerRights: "© 2026 Are You Okay? टीम। सर्वाधिकार सुरक्षित।",
+  },
+  id: {
+    title: "Ketentuan Penggunaan (EULA)",
+    lastUpdated: "Terakhir Diperbarui: 26 Mei 2026",
+    backHome: "← Kembali ke Beranda",
+    sec1Title: "1. Persetujuan Ketentuan",
+    sec1Desc: 'Dengan menginstal, mengakses, atau menggunakan aplikasi seluler atau situs web "Are You Okay?", Anda setuju untuk terikat oleh Ketentuan Penggunaan dan Perjanjian Lisensi Pengguna Akhir (EULA) ini. Jika Anda tidak setuju dengan ketentuan ini, jangan menginstal atau menggunakan aplikasi kami.',
+    sec2Title: "2. EULA Standar & Kebijakan Toko Perangkat",
+    sec2Desc: "Tergantung pada platform tempat Anda mengunduh aplikasi, Anda juga terikat oleh ketentuan toko perangkat standar:",
+    sec2Bullet1: '<strong>Apple App Store:</strong> Pembelian dan akses tunduk pada Perjanjian Lisensi Pengguna Akhir (EULA) Standar Apple yang tersedia di: <a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">https://www.apple.com/legal/internet-services/itunes/dev/stdeula/</a>.',
+    sec2Bullet2: '<strong>Google Play Store:</strong> Pembelian dan akses tunduk pada Ketentuan Layanan Google Play standar: <a href="https://play.google.com/intl/en_US/gplay/about/play-terms/index.html" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">https://play.google.com/intl/en_US/gplay/about/play-terms/index.html</a>.',
+    sec3Title: "3. Langganan Perpanjangan Otomatis & Tagihan",
+    sec3Desc: "Aplikasi kami menawarkan pembelian dalam aplikasi dan langganan perpanjangan otomatis (Tingkat Pro dan Premium) untuk memberikan fitur lanjutan:",
+    sec3Bullet1: "<strong>Opsi & Periode Langganan:</strong> Opsi mencakup durasi Bulanan (1 bulan) atau Tahunan (1 tahun).",
+    sec3Bullet2: "<strong>Pembayaran & Tagihan Akun:</strong> Pembayaran langganan diproses melalui Apple App Store/Google Play dan dibebankan ke akun iTunes/Google Play Store Anda setelah konfirmasi pembelian.",
+    sec3Bullet3: "<strong>Perpanjangan Otomatis:</strong> Langganan akan diperpanjang secara otomatis kecuali perpanjangan otomatis dimatikan setidaknya 24 jam sebelum akhir periode saat ini.",
+    sec3Bullet4: "<strong>Biaya Perpanjangan:</strong> Akun Anda akan dikenakan biaya perpanjangan dalam waktu 24 jam sebelum akhir periode saat ini dengan tarif paket yang dipilih.",
+    sec3Bullet5: "<strong>Pembatalan Periode Aktif:</strong> Tidak ada pembatalan langganan saat ini yang diizinkan selama periode langganan aktif. Jika Anda membatalkan, manfaat langganan aktif Anda tetap berfungsi hingga akhir siklus penagihan.",
+    sec3Bullet6: "<strong>Ketentuan Uji Coba Gratis:</strong> Setiap bagian yang tidak digunakan dari periode uji coba gratis, jika ditawarkan, akan hangus saat Anda membeli langganan ke tingkatan tersebut, jika berlaku.",
+    sec3Bullet7: "<strong>Pembatalan & Pengaturan:</strong> Anda dapat mengelola atau menonaktifkan perpanjangan otomatis langganan kapan saja di Pengaturan Akun Apple ID atau Google Play Store setelah pembelian. Pengembalian dana diproses dan dikelola sepenuhnya oleh masing-masing toko aplikasi.",
+    sec4Title: "4. Penyangkalan Medis & Krisis (KRITIS)",
+    sec4Desc: '<strong>⚠ PEMBERITAHUAN PENTING:</strong> "Are You Okay?" adalah alat pencatatan dan mindfulness pribadI. Ini **BUKAN** layanan diagnostik medis, pendamping perawatan klinis, atau hotline pencegahan bunuh diri. Jika Anda atau seseorang yang Anda kenal mengalami krisis psikologis akut, pikiran untuk menyakiti diri sendiri, atau menghadapi darurat medis, segera hubungi layanan darurat atau hotline kesehatan mental profesional: <br /><br /> • <strong>Hotline Vietnam:</strong> 1800 599 920 (Gratis, 24/7) <br /> • <strong>Hotline Internasional:</strong> befrienders.org / suicide.org',
+    sec5Title: "5. Kontak Tepercaya & Notifikasi",
+    sec5Desc: 'Jika Anda mengonfigurasi "kontak tepercaya", Anda mengizinkan server kami untuk mengirimkan email notifikasi yang aman kepada mereka yang berisi tautan aman untuk mengakses riwayat log suasana hati Anda jika Anda gagal check-in dalam durasi yang ditentukan. Anda sepenuhnya bertanggung jawab untuk memastikan detail kontak yang Anda masukkan benar dan Anda telah mendapatkan izin kontak untuk ditunjuk.',
+    sec6Title: "6. Kekayaan Intelektual",
+    sec6Desc: 'Semua kode perangkat lunak, desain visual, aset, ikonografi logo, dan sebutan merek dagang dari "Are You Okay?" tetap menjadi kekayaan intelektual eksklusif tim pengembangan kami. Anda diberikan lisensi terbatas, pribadi, tidak dapat dialihkan, dan dapat dibatalkan untuk menggunakan aplikasi untuk tujuan pribadi dan non-komersial.',
+    sec7Title: "7. Hukum yang Berlaku",
+    sec7Desc: "Ketentuan ini diatur dan ditafsirkan sesuai dengan hukum konsumen dan teknologi yang berlaku di yurisdiksi pengembang, bersama dengan pedoman kepatuhan pedagang internasional App Store dan Google Play.",
+    footerRights: "© 2026 Are You Okay? Team. Semua hak dilindungi undang-undang.",
+  },
+};
+
 export default function TermsOfUse() {
+  const [lang, setLang] = useState<string>("en");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const urlLang = params.get("lang");
+      if (urlLang && LOCALES[urlLang]) {
+        setLang(urlLang);
+        return;
+      }
+
+      const browserLang = navigator.language.split("-")[0];
+      if (LOCALES[browserLang]) {
+        setLang(browserLang);
+      }
+    }
+  }, []);
+
+  const t = LOCALES[lang] || LOCALES.en;
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-blue-600 selection:text-white py-16 px-6 relative overflow-x-hidden">
-      {/* Background Gradients */}
       <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none -translate-y-1/2"></div>
 
       <div className="max-w-3xl mx-auto space-y-12 relative z-10">
-        {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-900 pb-8">
           <Link href="/" className="flex items-center gap-2 group">
-            <span className="text-slate-400 group-hover:text-white transition-colors">← Back to Home</span>
+            <span className="text-slate-400 group-hover:text-white transition-colors">{t.backHome}</span>
           </Link>
-          <div className="flex items-center gap-2">
-            <span className="text-lg">💙</span>
-            <span className="font-extrabold text-sm text-white">Are You Okay?</span>
+          <div className="flex items-center gap-4">
+            <div className="relative">
+              <select
+                value={lang}
+                onChange={(e) => setLang(e.target.value)}
+                className="appearance-none bg-slate-900 border border-slate-800 text-xs font-semibold text-blue-400 hover:border-blue-500 hover:text-white transition-all rounded-full px-4 py-2 pr-8 cursor-pointer active:scale-95 outline-none"
+              >
+                {LANGUAGES.map((l) => (
+                  <option key={l.code} value={l.code} className="bg-slate-950 text-slate-100 font-sans">
+                    {l.flag} {l.name}
+                  </option>
+                ))}
+              </select>
+              <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none text-blue-400/80">
+                <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20">
+                  <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                </svg>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-lg">💙</span>
+              <span className="font-extrabold text-sm text-white">Are You Okay?</span>
+            </div>
           </div>
         </div>
 
-        {/* Title */}
         <div className="space-y-4">
-          <h1 className="text-4xl font-black text-white tracking-tight">Terms of Use (EULA)</h1>
-          <p className="text-sm text-slate-500 font-mono">Last Updated: May 26, 2026</p>
+          <h1 className="text-4xl font-black text-white tracking-tight">{t.title}</h1>
+          <p className="text-sm text-slate-500 font-mono">{t.lastUpdated}</p>
         </div>
 
-        {/* Terms Content */}
         <div className="space-y-8 text-slate-300 leading-relaxed text-sm">
           <section className="space-y-3">
-            <h2 className="text-xl font-bold text-white">1. Agreement to Terms</h2>
-            <p>
-              By installing, accessing, or using the &quot;Are You Okay?&quot; mobile application or website, you agree to be bound by these Terms of Use and End User License Agreement (EULA). If you do not agree to these terms, do not install or use our application.
-            </p>
+            <h2 className="text-xl font-bold text-white">{t.sec1Title}</h2>
+            <p>{t.sec1Desc}</p>
           </section>
 
           <section className="space-y-3">
-            <h2 className="text-xl font-bold text-white">2. Standard EULA & Device Store Policies</h2>
-            <p>
-              Depending on the platform you downloaded the application from, you are also bound by the standard device store terms:
-            </p>
+            <h2 className="text-xl font-bold text-white">{t.sec2Title}</h2>
+            <p>{t.sec2Desc}</p>
             <ul className="list-disc pl-6 space-y-2">
-              <li>
-                <strong>Apple App Store:</strong> Purchases and access are subject to Apple&apos;s Standard End User License Agreement (EULA) available at: <a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">https://www.apple.com/legal/internet-services/itunes/dev/stdeula/</a>.
-              </li>
-              <li>
-                <strong>Google Play Store:</strong> Purchases and access are subject to the standard Google Play Terms of Service: <a href="https://play.google.com/intl/en_US/gplay/about/play-terms/index.html" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">https://play.google.com/intl/en_US/gplay/about/play-terms/index.html</a>.
-              </li>
+              <li dangerouslySetInnerHTML={{ __html: t.sec2Bullet1 }} />
+              <li dangerouslySetInnerHTML={{ __html: t.sec2Bullet2 }} />
             </ul>
           </section>
 
           <section className="space-y-3">
-            <h2 className="text-xl font-bold text-white">3. Auto-Renewable Subscriptions & Billing</h2>
-            <p>
-              Our application offers in-app purchases and auto-renewable subscriptions (Pro and Premium Tiers) to grant advanced features:
-            </p>
+            <h2 className="text-xl font-bold text-white">{t.sec3Title}</h2>
+            <p>{t.sec3Desc}</p>
             <ul className="list-disc pl-6 space-y-2">
-              <li>
-                <strong>Subscription Options & Periods:</strong> Options include Monthly (1 month) or Yearly (1 year) durations.
-              </li>
-              <li>
-                <strong>Payment & Account Billing:</strong> Subscription payments are processed via Apple App Store / Google Play and are charged to your associated iTunes/Google Play Store account upon confirmation of purchase.
-              </li>
-              <li>
-                <strong>Auto-Renewal:</strong> Subscriptions automatically renew unless auto-renew is turned off at least 24-hours before the end of the current period.
-              </li>
-              <li>
-                <strong>Renewal Charges:</strong> Your account will be charged for renewal within 24-hours prior to the end of the current period at the rate of the selected plan. The cost of the renewal will be clearly identified in your account settings.
-              </li>
-              <li>
-                <strong>Active Period Cancellations:</strong> No cancellation of the current subscription is allowed during the active subscription period. If you cancel, your active subscription benefits remain functional until the end of the billing cycle.
-              </li>
-              <li>
-                <strong>Free Trial Terms:</strong> Any unused portion of a free trial period, if offered, will be forfeited when you purchase a subscription to that tier, where applicable.
-              </li>
-              <li>
-                <strong>Cancellation & Settings:</strong> You can manage or disable subscription auto-renewals at any time in your Apple ID or Google Play Store Account Settings after purchase. Refunds are processed and managed solely by the respective app stores.
-              </li>
+              <li dangerouslySetInnerHTML={{ __html: t.sec3Bullet1 }} />
+              <li dangerouslySetInnerHTML={{ __html: t.sec3Bullet2 }} />
+              <li dangerouslySetInnerHTML={{ __html: t.sec3Bullet3 }} />
+              <li dangerouslySetInnerHTML={{ __html: t.sec3Bullet4 }} />
+              <li dangerouslySetInnerHTML={{ __html: t.sec3Bullet5 }} />
+              <li dangerouslySetInnerHTML={{ __html: t.sec3Bullet6 }} />
+              <li dangerouslySetInnerHTML={{ __html: t.sec3Bullet7 }} />
             </ul>
           </section>
 
           <section className="space-y-3">
-            <h2 className="text-xl font-bold text-white">4. Medical & Crisis Disclaimer (CRITICAL)</h2>
-            <p className="bg-amber-950/40 border border-amber-900 rounded-xl p-4 text-amber-300">
-              <strong>⚠ IMPORTANT NOTICE:</strong> &quot;Are You Okay?&quot; is a personal self-help logging and mindfulness tool. It is **NOT** a medical diagnostic service, clinical treatment companion, or suicide prevention hotline. 
-              <br /><br />
-              If you or someone you know is undergoing an acute psychological crisis, experiencing thoughts of self-harm, or facing a medical emergency, please immediately contact emergency services or reach out to a professional mental health hotline:
-              <br /><br />
-              • **Vietnam Helpline:** 1800 599 920 (Free, 24/7)
-              <br />
-              • **International Helplines:** befrienders.org / suicide.org
-            </p>
+            <h2 className="text-xl font-bold text-white">{t.sec4Title}</h2>
+            <div className="bg-amber-950/40 border border-amber-900 rounded-xl p-4 text-amber-300">
+              <p dangerouslySetInnerHTML={{ __html: t.sec4Desc }} />
+            </div>
           </section>
 
           <section className="space-y-3">
-            <h2 className="text-xl font-bold text-white">5. Trusted Contacts & Notifications</h2>
-            <p>
-              If you configure a &quot;trusted contact&quot;, you authorize our server to securely send them an notification email containing a secure link to access your mood log history if you fail to check in for your designated duration. You are solely responsible for ensuring the contact details you enter are correct and that you have obtained the contact&apos;s permission to be designated.
-            </p>
+            <h2 className="text-xl font-bold text-white">{t.sec5Title}</h2>
+            <p>{t.sec5Desc}</p>
           </section>
 
           <section className="space-y-3">
-            <h2 className="text-xl font-bold text-white">6. Intellectual Property</h2>
-            <p>
-              All software code, visual designs, assets, logo iconography, and trademark designations of &quot;Are You Okay?&quot; remain the exclusive intellectual property of our development team. You are granted a limited, personal, non-transferable, revocable license to use the app for personal, non-commercial purposes.
-            </p>
+            <h2 className="text-xl font-bold text-white">{t.sec6Title}</h2>
+            <p>{t.sec6Desc}</p>
           </section>
 
           <section className="space-y-3">
-            <h2 className="text-xl font-bold text-white">7. Governing Law</h2>
-            <p>
-              These terms are governed by and construed in accordance with the applicable consumer and technology laws of the developer&apos;s jurisdiction, alongside international App Store and Google Play merchant compliance guidelines.
-            </p>
+            <h2 className="text-xl font-bold text-white">{t.sec7Title}</h2>
+            <p>{t.sec7Desc}</p>
           </section>
         </div>
 
-        {/* Footer */}
         <div className="border-t border-slate-900 pt-8 text-center text-xs text-slate-600">
-          <p>© 2026 Are You Okay? Team. All rights reserved.</p>
+          <p>{t.footerRights}</p>
         </div>
       </div>
     </div>

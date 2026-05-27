@@ -443,6 +443,9 @@ export default function Home() {
             <Link href="/terms" className="hover:text-white transition-colors">
               Terms of Use (EULA)
             </Link>
+            <Link href="/payment" className="hover:text-white transition-colors">
+              Payment Policy
+            </Link>
             <a href="mailto:loverhide.blog@gmail.com" className="hover:text-white transition-colors">
               Support Contact
             </a>
