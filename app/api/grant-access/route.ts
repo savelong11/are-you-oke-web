@@ -29,7 +29,22 @@ export async function POST(request: NextRequest) {
     const data = await response.json();
 
     if (!response.ok) {
-      return NextResponse.json(data, { status: response.status });
+      const ALLOWED_CODES = new Set([
+        'TOKEN_EXPIRED',
+        'INVALID_TOKEN',
+        'TOKEN_NOT_FOUND',
+        'TOKEN_REVOKED',
+        'ACCESS_DENIED',
+      ]);
+      const code = data?.code ?? 'UNKNOWN_ERROR';
+      const safeMessage = ALLOWED_CODES.has(code)
+        ? data.error
+        : 'Access check failed';
+      console.error('Edge function error:', { status: response.status, data });
+      return NextResponse.json(
+        { error: safeMessage, code: ALLOWED_CODES.has(code) ? code : 'UNKNOWN_ERROR' },
+        { status: response.status }
+      );
     }
 
     return NextResponse.json(data);
