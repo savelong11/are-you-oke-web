@@ -45,6 +45,12 @@ export default function Home() {
             >
               How it works
             </Link>
+            <Link 
+              href="#faq" 
+              className="text-sm font-medium text-slate-400 hover:text-white transition-colors hidden sm:inline-block"
+            >
+              FAQ
+            </Link>
             <Link
               href="#download"
               className="px-5 py-2.5 rounded-full bg-gradient-to-r from-blue-600 to-emerald-500 text-sm font-semibold text-white shadow-lg shadow-blue-600/20 hover:opacity-90 active:scale-95 transition-all"
@@ -322,6 +328,65 @@ export default function Home() {
                 If you fail to check in past your threshold, your contact gets a secure link. They can instantly see you are inactive and reach out to support you.
               </p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-24 bg-slate-950 border-t border-slate-900" id="faq">
+        <div className="max-w-3xl mx-auto px-6">
+          <div className="text-center max-w-2xl mx-auto space-y-4 mb-16">
+            <h2 className="text-xs font-bold uppercase tracking-wider text-blue-400 font-mono">
+              Frequently Asked Questions
+            </h2>
+            <p className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+              Everything you need to know
+            </p>
+            <p className="text-slate-400">
+              Answers to the most common questions about how Are You Okay? keeps you safe.
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            {[
+              {
+                q: "Is my data really private?",
+                a: "Yes. Your journals, mood logs, and voice notes are encrypted and only visible to you. Trusted contacts never see your entries — they only receive a silent alert if you go inactive past your threshold.",
+              },
+              {
+                q: "What exactly does my trusted contact see?",
+                a: "They receive a secure access link showing only your inactivity status and the last time you checked in. They cannot read your journal entries, listen to voice notes, or see your mood history.",
+              },
+              {
+                q: "Can I change my inactivity threshold?",
+                a: "Absolutely. You can set the buffer anywhere from 1 to 14 days based on what feels right for your routine and peace of mind.",
+              },
+              {
+                q: "What happens if I check in late?",
+                a: "As soon as you check in, the countdown resets and any pending alert is cancelled. Your trusted contact is only notified once the threshold is fully exceeded.",
+              },
+              {
+                q: "Is the app free to use?",
+                a: "The daily check-in, streak tracking, and emergency alerts are free forever. Premium features like unlimited voice journals and AI counseling are part of an optional subscription.",
+              },
+              {
+                q: "Which platforms are supported?",
+                a: "Are You Okay? is available on iOS and Android. Your data syncs securely across devices when you sign in.",
+              },
+            ].map((item, i) => (
+              <details
+                key={i}
+                className="group bg-slate-900/40 border border-slate-900 rounded-2xl p-6 hover:border-slate-800 transition-all"
+              >
+                <summary className="flex items-center justify-between cursor-pointer list-none">
+                  <h3 className="text-base font-bold text-white pr-4">{item.q}</h3>
+                  <span className="text-slate-500 group-open:rotate-45 transition-transform text-2xl font-light shrink-0">
+                    +
+                  </span>
+                </summary>
+                <p className="text-slate-400 text-sm leading-relaxed mt-4">{item.a}</p>
+              </details>
+            ))}
           </div>
         </div>
       </section>
